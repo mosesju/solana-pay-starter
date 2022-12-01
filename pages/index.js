@@ -1,11 +1,30 @@
 import React from "react";
 import HeadComponent from '../components/Head';
 
+import { PublicKey } from '@solana/web3.js';
+import { useWallet } from '@solana/wallet-adapter-react';
+import dynamic from "next/dynamic";
+
 // Constants
 const TWITTER_HANDLE = "_buildspace";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
+  const WalletMultiButtonDynamic = dynamic(
+    async () =>
+      (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton, {ssr:false}
+  );
+
+  const {publicKey} = useWallet();
+
+  const renderNotConnectedContainer = () => (
+    <div>
+      <img src="https://media.giphy.com/media/eSwGh3YK54JKU/giphy.gif" alt="emoji" />
+      <div className="button-container">
+        <WalletMultiButtonDynamic className="cta-button" />
+      </div>
+    </div>
+  )
   
   
   return (
@@ -13,12 +32,12 @@ const App = () => {
       <HeadComponent/>
       <div className="container">
         <header className="header-container">
-          <p className="header"> 😳 Buildspace Emoji Store 😈</p>
-          <p className="sub-text">The only emoji store that accepts sh*tcoins</p>
+          <p className="header"> 😳 Julian's tasty treats 😈</p>
+          <p className="sub-text">The only treat store that accepts sh*tcoins</p>
         </header>
 
         <main>
-          <img src="https://media.giphy.com/media/eSwGh3YK54JKU/giphy.gif" alt="emoji" />
+          {publicKey ? "Connected!" : renderNotConnectedContainer()}
         </main>
 
         <div className="footer-container">
